@@ -12,8 +12,7 @@ export async function GET() {
 
   try {
     const res = await fetch(url, {
-      headers: { 'Content-Type': 'application/json' },
-      // No cache — always fresh when user clicks Sync
+      redirect: 'follow',
       cache: 'no-store',
     })
 

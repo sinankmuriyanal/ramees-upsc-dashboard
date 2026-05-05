@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f2ede4;
+  --surface: #ffffff;
+  --surface-2: #faf6f0;
+  --border: #e0d5c8;
+  --border-light: #ece5d8;
+  --gold: #8b6210;
+  --gold-accent: #c8930a;
+  --gold-glow: rgba(139, 98, 16, 0.12);
+  --text: #1a120a;
+  --text-muted: #7a6858;
+  --text-dim: #b5a892;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-gold: var(--gold);
+  --color-gold-accent: var(--gold-accent);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-dim: var(--text-dim);
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Crimson Pro', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--border-light); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-accent); }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200, 147, 10, 0.06) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}

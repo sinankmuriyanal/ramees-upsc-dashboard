@@ -109,13 +109,13 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Topic-wise analysis */}
+        {/* Subtopic-wise analysis */}
         <Card>
-          <SectionTitle>Topic-wise Analysis</SectionTitle>
+          <SectionTitle>Subtopic-wise Analysis</SectionTitle>
           <p className="text-muted text-xs font-mono -mt-2 mb-4">
-            Most recently studied topics on top · V = Video · R = Reading · N = Notes · S = Summary
+            Most recently studied subtopics on top · V = Video · R = Reading · N = Notes · S = Summary
           </p>
-          <TopicAnalysis topics={data.topics} />
+          <TopicAnalysis rows={data.subtopicRows} />
         </Card>
 
         {/* Activity calendar */}

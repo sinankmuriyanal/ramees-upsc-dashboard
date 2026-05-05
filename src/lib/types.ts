@@ -63,12 +63,25 @@ export interface KPIs {
   mcqsStudied: number
 }
 
+export interface SubtopicDisplayRow {
+  subject: string
+  topic: string
+  subtopic: string
+  video: boolean
+  reading: boolean
+  note: boolean
+  summary: boolean
+  completion: number
+  lastActivity: string | null
+}
+
 export interface DashboardData {
   totalSubtopics: number
   completedSubtopics: number
   overallPct: number
   subjects: SubjectProgress[]
   topics: TopicEntry[]
+  subtopicRows: SubtopicDisplayRow[]
   kpis: KPIs
   activityByDay: Record<string, number>
   lastSynced: string | null

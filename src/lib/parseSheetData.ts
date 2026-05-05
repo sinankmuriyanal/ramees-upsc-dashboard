@@ -1,17 +1,13 @@
-import type { RawSheetData, DashboardData, SubjectProgress, TopicEntry } from './types'
+import type { RawSheetData, DashboardData, SubjectProgress, TopicEntry, SubtopicDisplayRow } from './types'
 
 export function parseSheetData(raw: RawSheetData): DashboardData {
-  // ── Subject map ──────────────────────────────────────────────
   const subjectMap = new Map<string, SubjectProgress>()
-
-  // ── Topic map ────────────────────────────────────────────────
   const topicMap = new Map<string, TopicEntry>()
 
   for (const row of raw.subtopics) {
     const { subject, topic } = row
     if (!subject) continue
 
-    // Subject aggregation
     if (!subjectMap.has(subject)) {
       subjectMap.set(subject, { subject, completed: 0, total: 0, pct: 0, videoCount: 0, readingCount: 0, noteCount: 0, summaryCount: 0 })
     }
@@ -24,7 +20,6 @@ export function parseSheetData(raw: RawSheetData): DashboardData {
     if (row.note) s.noteCount += 1
     if (row.summary) s.summaryCount += 1
 
-    // Topic aggregation
     if (!topic) continue
     const key = `${subject}||${topic}`
     if (!topicMap.has(key)) {
@@ -39,36 +34,41 @@ export function parseSheetData(raw: RawSheetData): DashboardData {
     if (row.summary) t.summaryCount += 1
   }
 
-  // ── Merge MCQ data ───────────────────────────────────────────
   for (const mcqRow of raw.topicsMCQ ?? []) {
-    const key = `${mcqRow.subject}||${mcqRow.topic}`
-    const t = topicMap.get(key)
+    const t = topicMap.get(`${mcqRow.subject}||${mcqRow.topic}`)
     if (t) t.mcqStudy += mcqRow.mcqStudy ?? 0
   }
 
-  // ── Build activity recency per topic ─────────────────────────
+  // ── Build recency maps ────────────────────────────────────────
+  // Per topic
   const topicLastActivity = new Map<string, string>()
+  // Per subtopic
+  const subtopicLastActivity = new Map<string, string>()
+
   for (const entry of raw.activity ?? []) {
-    if (!entry.date || !entry.topic) continue
-    const key = `${entry.subject}||${entry.topic}`
-    const existing = topicLastActivity.get(key)
-    if (!existing || entry.date > existing) topicLastActivity.set(key, entry.date)
+    if (!entry.date) continue
+    const topicKey = `${entry.subject}||${entry.topic}`
+    const existing = topicLastActivity.get(topicKey)
+    if (!existing || entry.date > existing) topicLastActivity.set(topicKey, entry.date)
+
+    if (entry.subtopic) {
+      const subKey = `${entry.subject}||${entry.topic}||${entry.subtopic}`
+      const existingSub = subtopicLastActivity.get(subKey)
+      if (!existingSub || entry.date > existingSub) subtopicLastActivity.set(subKey, entry.date)
+    }
   }
 
-  // Attach recency and compute pct
   for (const [key, t] of topicMap.entries()) {
     t.completionPct = t.subtopicsTotal > 0 ? Math.round((t.subtopicsDone / t.subtopicsTotal) * 100) : 0
     t.lastActivity = topicLastActivity.get(key) ?? null
   }
 
-  // ── Subject pcts ─────────────────────────────────────────────
   for (const s of subjectMap.values()) {
     s.pct = s.total > 0 ? Math.round((s.completed / s.total) * 100) : 0
   }
 
   const subjects = Array.from(subjectMap.values()).sort((a, b) => b.pct - a.pct)
 
-  // ── Topics: only those with progress, sorted by recency ──────
   const topics = Array.from(topicMap.values())
     .filter(t => t.subtopicsDone > 0 || t.videoCount > 0)
     .sort((a, b) => {
@@ -78,7 +78,31 @@ export function parseSheetData(raw: RawSheetData): DashboardData {
       return b.completionPct - a.completionPct
     })
 
-  // ── Activity by day ───────────────────────────────────────────
+  // ── Subtopic display rows ─────────────────────────────────────
+  // Only rows with any stage done, sorted by recency then by completion
+  const subtopicRows: SubtopicDisplayRow[] = raw.subtopics
+    .filter(r => r.subject && r.topic && r.subtopic && (r.video || r.reading || r.note || r.summary || r.completion > 0))
+    .map(r => ({
+      subject: r.subject,
+      topic: r.topic,
+      subtopic: r.subtopic,
+      video: r.video,
+      reading: r.reading,
+      note: r.note,
+      summary: r.summary,
+      completion: r.completion,
+      lastActivity: subtopicLastActivity.get(`${r.subject}||${r.topic}||${r.subtopic}`) ?? null,
+    }))
+    .sort((a, b) => {
+      if (a.lastActivity && b.lastActivity) return b.lastActivity.localeCompare(a.lastActivity)
+      if (a.lastActivity) return -1
+      if (b.lastActivity) return 1
+      // Fallback: more stages done = higher
+      const stagesA = +a.video + +a.reading + +a.note + +a.summary
+      const stagesB = +b.video + +b.reading + +b.note + +b.summary
+      return stagesB - stagesA
+    })
+
   const activityByDay: Record<string, number> = {}
   for (const entry of raw.activity ?? []) {
     if (!entry.date) continue
@@ -96,6 +120,7 @@ export function parseSheetData(raw: RawSheetData): DashboardData {
     overallPct: totalSubtopics > 0 ? Math.round((completedSubtopics / totalSubtopics) * 100) : 0,
     subjects,
     topics,
+    subtopicRows,
     kpis: {
       subjectsCovered: subjects.filter(s => s.completed > 0).length,
       topicsCovered: Array.from(topicMap.values()).filter(t => t.subtopicsDone > 0).length,

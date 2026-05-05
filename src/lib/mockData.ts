@@ -97,6 +97,27 @@ export const MOCK_DATA: DashboardData = {
     mcqStudy: t.mcq,
     lastActivity: format(subDays(today, t.daysAgo), 'yyyy-MM-dd'),
   })),
+  subtopicRows: TOPIC_DATA.flatMap((t, ti) =>
+    Array.from({ length: Math.min(t.done + 2, t.total) }, (_, si) => {
+      const stages = si < t.done
+      return {
+        subject: t.subject,
+        topic: t.topic,
+        subtopic: `Subtopic ${si + 1}`,
+        video: stages || si < t.v,
+        reading: stages || si < t.r,
+        note: stages || si < t.n,
+        summary: stages || si < t.s,
+        completion: si < t.done ? 1 : 0,
+        lastActivity: si === 0 ? format(subDays(today, t.daysAgo), 'yyyy-MM-dd') : null,
+      }
+    })
+  ).sort((a, b) => {
+    if (a.lastActivity && b.lastActivity) return b.lastActivity.localeCompare(a.lastActivity)
+    if (a.lastActivity) return -1
+    if (b.lastActivity) return 1
+    return 0
+  }),
   kpis: {
     subjectsCovered: subjects.filter(s => s.completed > 0).length,
     topicsCovered: TOPIC_DATA.length,

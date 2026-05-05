@@ -8,3 +8,4 @@
 - [2026-05-05] docs(changelog): sync 2026-05-05
 - [2026-05-05] update: Desktop/claude/Ramees-UPSC/dashboard/CLAUDE.md,Desktop/claude/Ramees-UPSC/dashboard/src/app/globals.css,Desktop/claude/Ramees-UPSC/dashboard/src/app/layout.tsx
 - [2026-05-05] fix: follow redirects when fetching Apps Script URL
+- [2026-05-05] update: .gitignore

@@ -11,3 +11,4 @@
 - [2026-05-05] update: .gitignore
 - [2026-05-05] fix: ring stats alignment, bar pct labels, calendar right-side spacing
 - [2026-05-05] fix: subtopic-level analysis rows, calendar fills full width with CSS grid
+- [2026-05-05] fix: bump cache key v3, guard subtopicRows undefined from stale cache

@@ -12,7 +12,7 @@ const SubjectBars   = dynamic(() => import('@/components/SubjectBars'),    { ssr
 const TopicAnalysis = dynamic(() => import('@/components/TopicAnalysis'),   { ssr: false })
 const ActivityCalendar = dynamic(() => import('@/components/ActivityCalendar'), { ssr: false })
 
-const LS_KEY = 'upsc_dashboard_cache_v2'
+const LS_KEY = 'upsc_dashboard_cache_v3'
 
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
@@ -115,7 +115,7 @@ export default function Dashboard() {
           <p className="text-muted text-xs font-mono -mt-2 mb-4">
             Most recently studied subtopics on top · V = Video · R = Reading · N = Notes · S = Summary
           </p>
-          <TopicAnalysis rows={data.subtopicRows} />
+          <TopicAnalysis rows={data.subtopicRows ?? []} />
         </Card>
 
         {/* Activity calendar */}

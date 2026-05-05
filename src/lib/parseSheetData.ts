@@ -122,8 +122,10 @@ export function parseSheetData(raw: RawSheetData): DashboardData {
     topics,
     subtopicRows,
     kpis: {
-      subjectsCovered: subjects.filter(s => s.completed > 0).length,
-      topicsCovered: Array.from(topicMap.values()).filter(t => t.subtopicsDone > 0).length,
+      // A topic is completed only when ALL its subtopics are done
+      // A subject is completed only when ALL its topics (i.e. all subtopics) are done
+      subjectsCovered: subjects.filter(s => s.total > 0 && s.completed === s.total).length,
+      topicsCovered: Array.from(topicMap.values()).filter(t => t.subtopicsTotal > 0 && t.subtopicsDone === t.subtopicsTotal).length,
       subtopicsDone: completedSubtopics,
       mcqsStudied,
     },

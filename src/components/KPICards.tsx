@@ -62,14 +62,14 @@ export default function KPICards({ kpis }: { kpis: KPIs }) {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       <KPICard
         icon={<BookOpen size={16} className="text-amber-700" />}
-        label="Subjects Covered"
+        label="Subjects Completed"
         value={kpis.subjectsCovered}
         total={TOTAL_SUBJECTS}
         color="bg-amber-50"
       />
       <KPICard
         icon={<Target size={16} className="text-blue-700" />}
-        label="Topics Covered"
+        label="Topics Completed"
         value={kpis.topicsCovered}
         total={TOTAL_TOPICS}
         color="bg-blue-50"

@@ -119,8 +119,8 @@ export const MOCK_DATA: DashboardData = {
     return 0
   }),
   kpis: {
-    subjectsCovered: subjects.filter(s => s.completed > 0).length,
-    topicsCovered: TOPIC_DATA.length,
+    subjectsCovered: subjects.filter(s => s.total > 0 && s.completed === s.total).length,
+    topicsCovered: TOPIC_DATA.filter(t => t.done === t.total).length,
     subtopicsDone: completedSubtopics,
     mcqsStudied: TOPIC_DATA.reduce((s, t) => s + t.mcq, 0),
   },

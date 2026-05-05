@@ -10,3 +10,4 @@
 - [2026-05-05] fix: follow redirects when fetching Apps Script URL
 - [2026-05-05] update: .gitignore
 - [2026-05-05] fix: ring stats alignment, bar pct labels, calendar right-side spacing
+- [2026-05-05] fix: subtopic-level analysis rows, calendar fills full width with CSS grid

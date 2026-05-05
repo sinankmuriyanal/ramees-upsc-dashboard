@@ -54,7 +54,7 @@ export default function ActivityCalendar({ activityByDay }: Props) {
   return (
     <div>
       <div className="overflow-x-auto pb-2">
-        <div style={{ minWidth: weeks.length * 13 + 24 }}>
+        <div style={{ width: 'fit-content' }}>
           {/* Month labels */}
           <div className="flex ml-6 mb-1" style={{ gap: 2 }}>
             {weeks.map((_, wi) => {

@@ -26,7 +26,7 @@ export default function OverallRing({ completed, total, pct }: Props) {
   const offset = animated ? CIRCUMFERENCE * (1 - pct / 100) : CIRCUMFERENCE
 
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center gap-4 w-full">
       <div className="relative">
         <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} className="drop-shadow-[0_0_24px_rgba(212,168,67,0.15)]">
           <defs>
@@ -85,20 +85,20 @@ export default function OverallRing({ completed, total, pct }: Props) {
         </div>
       </div>
 
-      <div className="flex items-center gap-8 text-center">
-        <div>
-          <div className="text-2xl font-mono font-bold text-text">{completed.toLocaleString()}</div>
-          <div className="text-xs text-muted tracking-widest uppercase mt-0.5">Done</div>
+      <div className="flex items-center justify-center gap-4 w-full text-center">
+        <div className="flex-1">
+          <div className="text-xl font-mono font-bold text-text">{completed.toLocaleString()}</div>
+          <div className="text-[10px] text-muted tracking-widest uppercase mt-0.5">Done</div>
         </div>
-        <div className="w-px h-8 bg-border" />
-        <div>
-          <div className="text-2xl font-mono font-bold text-text">{(total - completed).toLocaleString()}</div>
-          <div className="text-xs text-muted tracking-widest uppercase mt-0.5">Remaining</div>
+        <div className="w-px h-7 bg-border shrink-0" />
+        <div className="flex-1">
+          <div className="text-xl font-mono font-bold text-text">{(total - completed).toLocaleString()}</div>
+          <div className="text-[10px] text-muted tracking-widest uppercase mt-0.5">Remaining</div>
         </div>
-        <div className="w-px h-8 bg-border" />
-        <div>
-          <div className="text-2xl font-mono font-bold text-text">{total.toLocaleString()}</div>
-          <div className="text-xs text-muted tracking-widest uppercase mt-0.5">Total</div>
+        <div className="w-px h-7 bg-border shrink-0" />
+        <div className="flex-1">
+          <div className="text-xl font-mono font-bold text-text">{total.toLocaleString()}</div>
+          <div className="text-[10px] text-muted tracking-widest uppercase mt-0.5">Total</div>
         </div>
       </div>
     </div>

@@ -42,6 +42,33 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: { payl
   )
 }
 
+interface LabelProps {
+  x?: number
+  y?: number
+  width?: number
+  height?: number
+  value?: number
+}
+
+function PctLabel({ x = 0, y = 0, width = 0, height = 0, value = 0 }: LabelProps) {
+  if (value === 0) return null
+  const isNarrow = width < 36
+  return (
+    <text
+      x={isNarrow ? x + width + 5 : x + width - 6}
+      y={y + height / 2}
+      textAnchor={isNarrow ? 'start' : 'end'}
+      dominantBaseline="middle"
+      fill={isNarrow ? '#5a4838' : '#1a120a'}
+      fontSize={10}
+      fontFamily="IBM Plex Mono, monospace"
+      fontWeight={600}
+    >
+      {value}%
+    </text>
+  )
+}
+
 export default function SubjectBars({ subjects }: Props) {
   const sorted = [...subjects].sort((a, b) => b.pct - a.pct)
 
@@ -50,7 +77,7 @@ export default function SubjectBars({ subjects }: Props) {
       <BarChart
         data={sorted}
         layout="vertical"
-        margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
+        margin={{ top: 0, right: 40, left: 0, bottom: 0 }}
         barCategoryGap="30%"
       >
         <XAxis
@@ -70,7 +97,7 @@ export default function SubjectBars({ subjects }: Props) {
           tickLine={false}
         />
         <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.03)' }} />
-        <Bar dataKey="pct" radius={[0, 3, 3, 0]} background={{ fill: '#ede8df', radius: 3 }}>
+        <Bar dataKey="pct" radius={[0, 3, 3, 0]} background={{ fill: '#ede8df', radius: 3 }} label={<PctLabel />}>
           {sorted.map((entry) => (
             <Cell
               key={entry.subject}
